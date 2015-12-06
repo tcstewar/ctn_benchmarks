@@ -1,5 +1,6 @@
 import numpy as np
 import nengo
+from six import iteritems
 
 def gather_info(network, inputs, outputs, parents):
     for c in network.connections:
@@ -183,7 +184,7 @@ def pass_ensembles(model, max_dim=16):
                 total_out[key] += c.size_out
                 conns[key].append(c)
 
-        for key, total in total_out.items():
+        for key, total in iteritems(total_out):
             if total > max_dim:
                 f, slice = key
                 cs = conns[key]

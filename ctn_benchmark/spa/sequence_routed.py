@@ -5,7 +5,7 @@ Given no input, the model will cycle between cortical states using a
 basal ganglia and thalamus.
 """
 
-import split
+from . import split
 
 
 import ctn_benchmark
@@ -56,7 +56,7 @@ class SPASequenceRouted(ctn_benchmark.Benchmark):
             for node in model.all_nodes:
                 if node.output is None:
                     if node.size_in > p.pf_max_dim:
-                        print 'limiting', node
+                        print('limiting', node)
                         model.config[node].n_cores_per_chip = p.pf_cores
                         model.config[node].n_chips = p.pf_n_chips
 
