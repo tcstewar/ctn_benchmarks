@@ -90,6 +90,35 @@ class TestParameterSet(object):
         ps.add_parameter(parameters.Parameter('p', "desc", default=0))
         assert dict(ps) == {'p': 0}
 
+    def test_setting_with_kwargs(self, ps):
+        ps.add_parameter(parameters.Parameter('p1', "desc", default=0))
+        ps.add_parameter(parameters.Parameter('p2', "desc", default=0))
+        ps.set(p1=1, p2=2)
+        assert ps.p1 == 1
+        assert ps.p2 == 2
+
+        with pytest.raises(KeyError):
+            ps.set(nonexistent=3)
+
+    def test_dict_keys_are_hierarchical(self, ps):
+        ps.add_default("root", root=parameters.ParameterSet())
+        ps.root.add_default("leaf", leaf=2)
+        ps['root.leaf'] = 3
+        assert ps['root.leaf'] == 3
+        del ps['root.leaf']
+        assert ps['root.leaf'] == 2
+
+    def test_provides_flattened_version(self, ps):
+        ps.add_default("foo", foo=1)
+        ps.add_default("root", root=parameters.ParameterSet())
+        ps.root.add_default("leaf", leaf=2)
+        flat = ps.flatten()
+        print flat
+        assert 'foo' in flat
+        assert flat['foo'] == 1
+        assert 'root.leaf' in flat
+        assert flat['root.leaf'] == 2
+
 
 class TestArgumentParserConversion(object):
     @pytest.fixture()
