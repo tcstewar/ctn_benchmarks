@@ -119,7 +119,12 @@ class Benchmark(object):
             plt.figure()
         else:
             plt = None
+
+        # --- build
+        build_start_time = time.time()
         sim = Simulator(model, dt=p.dt)
+        build_time = time.time() - build_start_time
+
         self.start_time = time.time()
         self.sim_speed = None
         result = self.evaluate(p, sim, plt)
@@ -127,6 +132,8 @@ class Benchmark(object):
         if p.backend == 'nengo_spinnaker':
             sim.close()
 
+        if 'build_time' not in result:
+            result['build_time'] = build_time
         if self.sim_speed is not None and 'sim_speed' not in result:
             result['sim_speed'] = self.sim_speed
 
